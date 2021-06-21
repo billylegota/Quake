@@ -182,7 +182,7 @@ PIXEL24 xlib_rgb24(int r,int g,int b)
 
 void st2_fixup( XImage *framebuf, int x, int y, int width, int height)
 {
-	int xi,yi;
+	int yi;
 	unsigned char *src;
 	PIXEL16 *dest;
 	register int count, n;
@@ -190,7 +190,7 @@ void st2_fixup( XImage *framebuf, int x, int y, int width, int height)
 	if( (x<0)||(y<0) )return;
 
 	for (yi = y; yi < (y+height); yi++) {
-		src = &framebuf->data [yi * framebuf->bytes_per_line];
+		src = (unsigned char *) &framebuf->data [yi * framebuf->bytes_per_line];
 
 		// Duff's Device
 		count = width;
@@ -218,7 +218,7 @@ void st2_fixup( XImage *framebuf, int x, int y, int width, int height)
 
 void st3_fixup( XImage *framebuf, int x, int y, int width, int height)
 {
-	int xi,yi;
+	int yi;
 	unsigned char *src;
 	PIXEL24 *dest;
 	register int count, n;
@@ -226,7 +226,7 @@ void st3_fixup( XImage *framebuf, int x, int y, int width, int height)
 	if( (x<0)||(y<0) )return;
 
 	for (yi = y; yi < (y+height); yi++) {
-		src = &framebuf->data [yi * framebuf->bytes_per_line];
+		src = (unsigned char *) &framebuf->data [yi * framebuf->bytes_per_line];
 
 		// Duff's Device
 		count = width;
@@ -659,9 +659,9 @@ void	VID_Init (unsigned char *palette)
 
 	current_framebuffer = 0;
 	vid.rowbytes = x_framebuffer[0]->bytes_per_line;
-	vid.buffer = x_framebuffer[0]->data;
+	vid.buffer = (pixel_t *) x_framebuffer[0]->data;
 	vid.direct = 0;
-	vid.conbuffer = x_framebuffer[0]->data;
+	vid.conbuffer = (pixel_t *) x_framebuffer[0]->data;
 	vid.conrowbytes = vid.rowbytes;
 	vid.conwidth = vid.width;
 	vid.conheight = vid.height;
@@ -956,10 +956,7 @@ void GetEvent(void)
 
 void	VID_Update (vrect_t *rects)
 {
-	vrect_t full;
-
-// if the window changes dimension, skip this frame
-
+    // if the window changes dimension, skip this frame
 	if (config_notify)
 	{
 		fprintf(stderr, "config notify\n");
@@ -971,7 +968,7 @@ void	VID_Update (vrect_t *rects)
 		else
 			ResetFrameBuffer();
 		vid.rowbytes = x_framebuffer[0]->bytes_per_line;
-		vid.buffer = x_framebuffer[current_framebuffer]->data;
+		vid.buffer = (pixel_t *) x_framebuffer[current_framebuffer]->data;
 		vid.conbuffer = vid.buffer;
 		vid.conwidth = vid.width;
 		vid.conheight = vid.height;
@@ -1012,7 +1009,7 @@ void	VID_Update (vrect_t *rects)
 			rects = rects->pnext;
 		}
 		current_framebuffer = !current_framebuffer;
-		vid.buffer = x_framebuffer[current_framebuffer]->data;
+		vid.buffer = (pixel_t *) x_framebuffer[current_framebuffer]->data;
 		vid.conbuffer = vid.buffer;
 		XSync(x_disp, False);
 	}

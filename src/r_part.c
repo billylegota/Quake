@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#include <stdlib.h>
+
 #include "quakedef.h"
 #include "r_local.h"
 
@@ -123,23 +125,21 @@ float	timescale = 0.01;
 
 void R_EntityParticles (entity_t *ent)
 {
-	int			count;
 	int			i;
 	particle_t	*p;
 	float		angle;
-	float		sr, sp, sy, cr, cp, cy;
+	float		sp, sy, cp, cy;
 	vec3_t		forward;
 	float		dist;
 	
 	dist = 64;
-	count = 50;
 
-if (!avelocities[0][0])
-{
-for (i=0 ; i<NUMVERTEXNORMALS*3 ; i++)
-avelocities[0][i] = (rand()&255) * 0.01;
-}
-
+    if (!avelocities[0][0])
+    {
+        for (i=0 ; i<NUMVERTEXNORMALS*3 ; i++) {
+            avelocities[0][i] = (rand() & 255) * 0.01;
+        }
+    }
 
 	for (i=0 ; i<NUMVERTEXNORMALS ; i++)
 	{
@@ -150,9 +150,7 @@ avelocities[0][i] = (rand()&255) * 0.01;
 		sp = sin(angle);
 		cp = cos(angle);
 		angle = cl.time * avelocities[i][2];
-		sr = sin(angle);
-		cr = cos(angle);
-	
+
 		forward[0] = cp*cy;
 		forward[1] = cp*sy;
 		forward[2] = -sp;
@@ -253,17 +251,21 @@ void R_ParseParticleEffect (void)
 	vec3_t		org, dir;
 	int			i, count, msgcount, color;
 	
-	for (i=0 ; i<3 ; i++)
-		org[i] = MSG_ReadCoord ();
-	for (i=0 ; i<3 ; i++)
-		dir[i] = MSG_ReadChar () * (1.0/16);
+	for (i=0 ; i<3 ; i++) {
+        org[i] = MSG_ReadCoord();
+    }
+	for (i=0 ; i<3 ; i++) {
+        dir[i] = MSG_ReadChar() * (1.0 / 16);
+    }
 	msgcount = MSG_ReadByte ();
 	color = MSG_ReadByte ();
 
-if (msgcount == 255)
-	count = 1024;
-else
-	count = msgcount;
+    if (msgcount == 255) {
+        count = 1024;
+    }
+    else {
+        count = msgcount;
+    }
 	
 	R_RunParticleEffect (org, dir, color, count);
 }

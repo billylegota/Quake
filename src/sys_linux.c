@@ -93,11 +93,13 @@ void Sys_Printf (char *fmt, ...)
 	vsprintf (text,fmt,argptr);
 	va_end (argptr);
 
-	if (strlen(text) > sizeof(text))
-		Sys_Error("memory overwrite in Sys_Printf");
+	if (strlen(text) > sizeof(text)) {
+        Sys_Error("memory overwrite in Sys_Printf");
+    }
 
-    if (nostdout)
+    if (nostdout) {
         return;
+    }
 
 	for (p = (unsigned char *)text; *p; p++) {
 		*p &= 0x7f;

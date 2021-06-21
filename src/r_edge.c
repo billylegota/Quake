@@ -696,13 +696,14 @@ void R_ScanEdges (void)
 	edge_aftertail.next = &edge_sentinel;
 	edge_aftertail.prev = &edge_tail;
 
-// FIXME: do we need this now that we clamp x in r_draw.c?
+    // FIXME: do we need this now that we clamp x in r_draw.c?
+    // FIXME: what on earth is this constant?
 	edge_sentinel.u = 2000 << 24;		// make sure nothing sorts past this
 	edge_sentinel.prev = &edge_aftertail;
 
-//	
-// process all scan lines
-//
+    //
+    // process all scan lines
+    //
 	bottom = r_refdef.vrectbottom - 1;
 
 	for (iv=r_refdef.vrect.y ; iv<bottom ; iv++)

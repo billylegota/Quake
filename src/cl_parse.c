@@ -335,7 +335,6 @@ void CL_ParseUpdate (int bits)
 	qboolean	forcelink;
 	entity_t	*ent;
 	int			num;
-	int			skin;
 
 	if (cls.signon == SIGNONS - 1)
 	{	// first update is the final signon stage
@@ -356,25 +355,31 @@ void CL_ParseUpdate (int bits)
 
 	ent = CL_EntityNum (num);
 
-for (i=0 ; i<16 ; i++)
-if (bits&(1<<i))
-	bitcounts[i]++;
+    for (i = 0; i < 16; i++) {
+        if (bits & (1 << i)) {
+            bitcounts[i]++;
+        }
+    }
 
-	if (ent->msgtime != cl.mtime[1])
-		forcelink = true;	// no previous frame to lerp from
-	else
-		forcelink = false;
+	if (ent->msgtime != cl.mtime[1]) {
+        forcelink = true;    // no previous frame to lerp from
+    }
+	else {
+        forcelink = false;
+    }
 
 	ent->msgtime = cl.mtime[0];
 	
 	if (bits & U_MODEL)
 	{
 		modnum = MSG_ReadByte ();
-		if (modnum >= MAX_MODELS)
-			Host_Error ("CL_ParseModel: bad modnum");
+		if (modnum >= MAX_MODELS) {
+            Host_Error("CL_ParseModel: bad modnum");
+        }
 	}
-	else
-		modnum = ent->baseline.modelindex;
+	else {
+        modnum = ent->baseline.modelindex;
+    }
 		
 	model = cl.model_precache[modnum];
 	if (model != ent->model)
